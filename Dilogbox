@@ -1,14 +1,17 @@
- final Dialog dialog = new Dialog(UserActivity.this, R.style.cust_dialog);
+ final Dialog dialog = new Dialog(context);
             dialog.setContentView(R.layout.dialog);
-            dialog.setTitle(R.string.Message);
-            // Set dialog title
+            dialog.setTitle("Title...");
+
+            // set the custom dialog components - text, image and button
             TextView text = (TextView) dialog.findViewById(R.id.textDialog);
-            text.setText("enter phone Number ");
+            text.setText("Enter Email");
             dialog.show();
-            TextView declineButton = (TextView) dialog.findViewById(R.id.declineButton);
-            declineButton.setOnClickListener(new View.OnClickListener() {
+
+            Button dialogButton = (Button) dialog.findViewById(R.id.declineButton);
+            // if button is clicked, close the custom dialog
+            dialogButton.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View v) {
                     dialog.dismiss();
                 }
             });
