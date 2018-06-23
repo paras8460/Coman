@@ -1,0 +1,19 @@
+Cursor res = databaseHelper.getAllPersons();
+                            StringBuffer buffer = new StringBuffer();
+                            while (res.moveToNext()) {
+                                buffer.append("id :" + res.getInt(0) + "\n");
+                                buffer.append("firstname :" + res.getString(1) + "\n");
+                                buffer.append("lastname :" + res.getString(2) + "\n");
+                                buffer.append("email :" + res.getString(3) + "\n\n");
+                                buffer.append("phonenumber :" + res.getString(4) + "\n\n");
+                                buffer.append("password :" + res.getString(5) + "\n\n");
+                                buffer.append("photo :" + res.getString(6) + "\n\n");
+
+                                Log.e("TEST", "ID : " + res.getInt(0));
+                                Log.e("TEST", "firstname : " + res.getString(1));
+                                Log.e("TEST", "lastname : " + res.getString(2));
+                                Log.e("TEST", "email : " + res.getString(3));
+                                Log.e("TEST", "phonenumber : " + res.getString(4));
+                                Log.e("TEST", "password : " + res.getString(5));
+                                Log.e("TEST", "photo : " + res.getString(6));
+}
