@@ -1,0 +1,14 @@
+ final Dialog dialog = new Dialog(UserActivity.this, R.style.cust_dialog);
+            dialog.setContentView(R.layout.dialog);
+            dialog.setTitle(R.string.Message);
+            // Set dialog title
+            TextView text = (TextView) dialog.findViewById(R.id.textDialog);
+            text.setText("enter phone Number ");
+            dialog.show();
+            TextView declineButton = (TextView) dialog.findViewById(R.id.declineButton);
+            declineButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
