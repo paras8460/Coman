@@ -1,0 +1,21 @@
+         Intent i = new Intent(getApplicationContext(), DroverActivity.class);
+                Bundle bundle = new Bundle();
+                //Add your data from getFactualResults method to bundle
+                bundle.putString("NAME",name);
+                bundle.putString("EMAIL",email);
+                bundle.putString("IMAGE", String.valueOf(photoUri));
+                i.putExtras(bundle);
+                startActivity(i);
+                
+                
+                
+                  Bundle bundle = getActivity().getIntent().getExtras();
+
+        String Name = bundle.getString("NAME");
+        String profile = bundle.getString("EMAIL");
+        name.setText(Name);
+        Profile.setText(profile);
+
+
+        Picasso.with(getActivity()).load("" +bundle.getString("IMAGE")).into(ivProfile);
+
