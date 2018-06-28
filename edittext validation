@@ -1,0 +1,10 @@
+ public static boolean isValid(EditText edt, String error){
+        boolean isValid;
+        if (edt.getText().toString().length()>0){
+            isValid= true;
+        }else {
+            isValid = false;
+            edt.setError(error);
+        }
+        return isValid;
+    }
