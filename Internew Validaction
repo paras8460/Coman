@@ -1,0 +1,12 @@
+ public static boolean isNetworkAvailable(Context context) {
+        boolean isAvailable;
+        ConnectivityManager connectivityMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityMgr.getActiveNetworkInfo();
+        isAvailable=networkInfo != null && networkInfo.isConnected();
+        if (isAvailable){
+            return true;
+        }else {
+            Toast.makeText(context, "Please check your internet connection.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+    }
