@@ -1,0 +1,251 @@
+\\\\\\\\ java \\\\\\
+
+
+public class SettingActivity extends AppCompatActivity  {
+    private RadioButton rbCh,rbEn;
+   // private OnLanguageChangeListener languageChangeListener;
+    SessionManager session;
+    private ImageView iv_back;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting);
+        //Toolbar mToolbar = findViewById(R.id.toolbar);
+        //TextView mTitle = mToolbar.findViewById(R.id.toolbar_title);
+       // iv_back = mToolbar.findViewById(R.id.iv_back_toolbar);
+
+       // iv_back.setVisibility(View.VISIBLE);
+      //  mTitle.setText(getString(R.string.nav_item_setting));
+      //  back();
+        rbCh=findViewById(R.id.rb_ch);
+        rbEn=findViewById(R.id.rb_en);
+        session = new SessionManager(this);
+        if(User.getLanguageId()!=null){
+            selectRb(User.getLanguageId());
+        }
+        rbCh.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                rbEn.setChecked(false);
+                selectLanguage(rbCh);
+            }
+        });
+        rbEn.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked){
+                rbCh.setChecked(false);
+                selectLanguage(rbEn);
+            }
+        });
+    }
+    private void selectLanguage(RadioButton rb){
+
+        String languageToLoad;
+
+        switch (rb.getId()) {
+         /*   case R.id.rb_ch:
+                languageToLoad = "ch"; // your language
+                Locale locale = new Locale(languageToLoad);
+                Locale.setDefault(locale);
+                Configuration config = new Configuration();
+                config.locale = locale;
+                getApplicationContext().getResources().updateConfiguration(config,
+                        getApplicationContext().getResources().getDisplayMetrics());
+                break;*/
+            case R.id.rb_en:
+                languageToLoad = "en"; // your language
+                Locale locale = new Locale(languageToLoad);
+                Locale.setDefault(locale);
+                Configuration    config = new Configuration();
+                config.locale = locale;
+                getApplicationContext().getResources().updateConfiguration(config,
+                        getApplicationContext().getResources().getDisplayMetrics());
+                break;
+
+            default:
+                languageToLoad = "ch"; // your language
+                locale = new Locale(languageToLoad);
+                Locale.setDefault(locale);
+                config = new Configuration();
+                config.locale = locale;
+                getApplicationContext().getResources().updateConfiguration(config,
+                      getApplicationContext().getResources().getDisplayMetrics());
+                break;
+        }
+
+        ////save changes to database
+        if (Const.isNetworkAvailable(this)){
+            updateLanguage(languageToLoad,User.getUserId());
+        }
+
+    }
+
+    private void selectRb(String languageCode){
+
+        // selected language
+
+        switch (languageCode) {
+            case "en":
+                rbEn.setChecked(true);
+                break;
+            default:
+                rbCh.setChecked(true);
+                break;
+        }
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getApplicationContext().getResources().updateConfiguration(config,
+                getApplicationContext().getResources().getDisplayMetrics());
+
+    }
+    private void updateLanguage(final String languageCode, String userId){
+
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+
+        Call<ApiResponse> call = apiService.updateLanguage(languageCode,userId);
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse> call, @NonNull Response<ApiResponse> response) {
+                int statusCode = response.code();
+             //   String msg=response.message();
+                if (statusCode==200){
+                    ApiResponse data = response.body();
+
+                    int status=data.getStatus();
+                    //String message = data.getMessage();
+                    if (status==1){
+
+                     //   languageChangeListener.languageChange();
+                        session.updateLanguage(languageCode);
+                        User.setLanguageId(languageCode);
+                        Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intent);
+                        finish();                       // Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                    } //  Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+
+                } // Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse> call, @NonNull Throwable t) {
+                Log.e(TAG, t.toString());
+            }
+        });
+    }
+
+    /*=== Button back ===*/
+    private void back() {
+        iv_back.setOnClickListener(v -> finish());
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent=new Intent(getApplicationContext(),MainActivity.class);
+        startActivity(intent);
+        finish();
+        super.onBackPressed();
+    }
+}
+
+
+
+//////// xml //////
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context=".activity.SettingActivity">
+
+  <!--  <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />-->
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/colorPrimary"
+            android:orientation="vertical" />
+
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="50dp"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="vertical">
+
+
+                                <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="10dp">
+                                <TextView
+                                    style="@style/TextRegular"
+                                    android:text="@string/chinese"
+                                    android:textSize="18sp"
+                                    android:layout_weight="1"/>
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/rb_ch" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@android:color/darker_gray"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"/>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:padding="10dp">
+                                <TextView
+                                    style="@style/TextRegular"
+                                    android:text="@string/english"
+                                    android:textSize="18sp"
+                                    android:layout_weight="1"/>
+                                <RadioButton
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/rb_en" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+
+
+
+                  </android.support.v7.widget.CardView>
+    </FrameLayout>
+
+
+
+</LinearLayout>
